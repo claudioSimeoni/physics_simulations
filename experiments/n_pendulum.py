@@ -18,11 +18,11 @@ xpivot = 0
 ypivot = 0
 
 print("Insert l values: ")
-lvals = [xlim / 6 for _ in range(n)]
+lvals = [xlim / n for _ in range(n)]
 print("Insert m values: ")
 mvals = [1 for _ in range(n)]
 print("Insert th values: ")
-thvals = [1 + 0.1 * i for i in range(n)]
+thvals = [2 + i * 0.1 for i in range(n)]
 gval = 9.81
 
 x = [sum(l[k] * sin(th[k](t)) for k in range(i + 1)) for i in range(n)]
@@ -38,8 +38,8 @@ L = T - U
 eq = [diff(diff(L, diff(th[i](t), t)), t) - diff(L, th[i](t)) for i in range(n)]
 
 # replacing in the equation
-th_sym   = symbols(f'th_sym0:{n}')
-thd_sym  = symbols(f'thd_sym0:{n}')
+th_sym = symbols(f'th_sym0:{n}')
+thd_sym = symbols(f'thd_sym0:{n}')
 thdd_sym = symbols(f'thdd_sym0:{n}')
 
 rep = {g: gval}
@@ -50,13 +50,12 @@ for j in range(n):
     rep[m[j]] = mvals[j]
     rep[l[j]] = lvals[j]
 
+
 eq_subs = [eq[i].xreplace(rep) for i in range(n)]
-# eq_resp_dd = list(linsolve(eq_subs, [thdd_sym[j] for j in range(n)]))[0]
-# eq_function = lambdify([thd_sym, th_sym], eq_resp_dd, "numpy")
 
 # constants 
 animation_length = 10
-frames_per_second = 60
+frames_per_second = 120
 frames = animation_length * frames_per_second
 animation_interval = 1 / frames_per_second
 updates_per_frame = 1
@@ -84,7 +83,7 @@ def f(time, pos):
 # plotting
 fig, ax = plt.subplots()
 ax.set_xlim(-xlim, xlim)
-ax.set_ylim(-ylim, 0)
+ax.set_ylim(-ylim, ylim / 2)
 
 # setting initial values of time and angle
 time = 0

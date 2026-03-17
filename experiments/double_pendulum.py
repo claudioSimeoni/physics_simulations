@@ -3,8 +3,8 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 
 # defining constants and numerical method's utility
-xlim = 0.70
-ylim = 0.40
+xlim = 7
+ylim = 4
 
 l1 = ylim * 2 / 6
 l2 = ylim * 2 / 6
@@ -17,10 +17,10 @@ initial_theta1 = np.pi / 8
 initial_theta2 = np.pi
 
 animation_length = 10 # seconds
-frames_per_second = 120
+frames_per_second = 60
 frames = animation_length * frames_per_second
 animation_interval = 1 / frames_per_second
-updates_per_frame = 5
+updates_per_frame = 1
 dt = 1 / (frames_per_second * updates_per_frame)
 
 def rk4(f, x, y, dx): 
