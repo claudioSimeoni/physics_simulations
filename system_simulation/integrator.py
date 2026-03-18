@@ -3,13 +3,12 @@ import numpy as np
 
 # with Hamiltonian Mechanics the state is assumed to be q = state[:n], p = state[n:]
 class DynamicSystem:
-    def __init__(self, time, state, number_of_bodies, f = None, hp = None, hq = None): # TODO: handling errors if I call a not defined function 
-        self.time = time
+    def __init__(self, state, state_vector_dimension, space_dimension):
+        self.time = 0
         self.state = state
-        self.n = number_of_bodies
-        self.f = f
-        self.hp = hp
-        self.hq = hq
+        self.dim = state_vector_dimension
+        self.npc = state_vector_dimension // 2 # number of positional coordinates
+        self.nb = state_vector_dimension // (2 * space_dimension) # number of bodies
 
 
 class Integrator:
@@ -21,21 +20,37 @@ class Integrator:
     
 
 class RK4(Integrator):
-    def update(self, system):
-        dt, t, y, f = self.h, system.time, system.state, system.f
+    def update(self, system, f):
+        dt, t, y, f = self.h, system.time, system.state, f
         k1 = f(t, y)
         k2 = f(t + dt/2, y + dt/2 * k1)
         k3 = f(t + dt/2, y + dt/2 * k2)
         k4 = f(t + dt, y + dt * k3)
-        system.t, system.state = t + dt, y + dt/6 * (k1 + 2 * k2 + 2 * k3 + k4)
+        system.time, system.state = t + dt, y + dt/6 * (k1 + 2 * k2 + 2 * k3 + k4)
+
+
+class ExplicitEuler(Integrator):
+    def update(self, system, Hp, Hq):
+        q, p, Hp, Hq, dt = system.state[:system.npc], system.state[system.npc:], Hp, Hq, self.h
+        q[:], p[:] = q + dt * Hp(p), p + dt * -Hq(q)
+        system.time += dt
         
 
-class Leapfrog(Integrator):
-    def update(self, system):
-        q, p, hp, hq, dt = system.state[:system.n], system.state[system.n:], system.hp, system.hq, self.h
-        pm = p - dt / 2 * hq(q)
-        q = q + dt * hp(pm)
-        p = pm - dt / 2 * hq(q)
+class SymplecticEuler(Integrator):
+    def update(self, system, Hp, Hq):
+        q, p, Hp, Hq, dt = system.state[:system.npc], system.state[system.npc:], Hp, Hq, self.h
+        p[:] = p + dt * -Hq(q)
+        q[:] = q + dt * Hp(p)
+        system.time += dt
+    
+
+class VerletStormer(Integrator):
+    def update(self, system, Hp, Hq):
+        q, p, Hp, Hq, dt = system.state[:system.npc], system.state[system.npc:], Hp, Hq, self.h
+        pm = p - dt / 2 * Hq(q)
+        q[:] = q + dt * Hp(pm)
+        p[:] = pm - dt / 2 * Hq(q)
+        system.time += dt
 
 # TODO: implementing other integrators
 
