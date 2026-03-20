@@ -6,14 +6,14 @@ import matplotlib.animation as animation
 
 '''
 - TODO: possibilities on what to plot: 
-    1. Trajectories (with camera on center of mass)
+    1. Trajectories (with camera on center of mass?)
     2. Shadows
     3. Energy
     4. Angular Momentum
     ...
 
-- how will this work:
-    the Animator takes the Elements to plot (object that describe each ax), when updating it 
+- how does this work:
+    the Animator takes the Elements to plot (object that describe one ax), when updating it 
     makes the system step on, and after that it plots the graphics with the updates of each 
     Element
 '''

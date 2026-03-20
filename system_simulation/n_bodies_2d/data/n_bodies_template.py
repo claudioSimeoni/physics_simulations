@@ -3,33 +3,33 @@ from scipy.spatial.transform import Rotation
 import random
 
 
-n = 3
+n = 10
 G = 1
-PLANETS_MASSES = [1] * 3 # masses of the planets
+PLANETS_MASSES = [100000] + [1] * (n - 1) # masses of the planets
 STAR_MASS = PLANETS_MASSES[0]
-e = 1 # eccentricity of orbits, can even be a np.array()
+e = 1.2 # eccentricity of orbits, can even be a np.array()
 
 
 # 1. R, V initialization through LIST OF INITIAL PERIODS / MODULES OF SPEED AND COORDINATES / CAN ROTATE VECTORS WITH THE ROTATE
 
-# MAX_T = 5
-# T = np.array([0] + [MAX_T * random.random() for _ in range(n - 1)])
-# MOD_R = (((T ** 2) * STAR_MASS * G) / (4 * (np.pi ** 2))) ** (1 / 3)
-# MOD_V = np.concatenate((np.zeros((1, )), (STAR_MASS * G / MOD_R[1:]) ** (1 / 2)))
+MAX_T = 5
+T = np.array([0] + [MAX_T * random.random() for _ in range(n - 1)])
+MOD_R = (((T ** 2) * STAR_MASS * G) / (4 * (np.pi ** 2))) ** (1 / 3)
+MOD_V = np.concatenate((np.zeros((1, )), (STAR_MASS * G / MOD_R[1:]) ** (1 / 2)))
 
-# R = [[MOD_R[i].item(), 0] for i in range(n)]
-# V = [[0, MOD_V[i].item()] for i in range(n)]
+R = [[MOD_R[i].item(), 0] for i in range(n)]
+V = [[0, MOD_V[i].item()] for i in range(n)]
 
 
 # 2. R, V initialization through LIST OF COORDINATES / SPEEDS
 
-R = [[-0.97000436, 0.24308753], 
-     [0.97000436, -0.24308753], 
-     [0, 0]]
+# R = [[1, 2], 
+#      [4, 5],
+#      [7, 8]]
 
-V = [[0.4662036850, 0.4323657300], 
-     [0.4662036850, 0.4323657300],
-     [-0.93240737, -0.86473146]]
+# V = [[1, 2], 
+#      [4, 5],
+#      [7, 8]]
 
 
 # ------------------------------------------------------------------------------

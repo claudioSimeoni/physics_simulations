@@ -10,12 +10,13 @@ from .. import animator
 # 
 
 class Simulator:
-    def __init__(self, n, m, mm, soft, sizes, integ, system):
+    def __init__(self, n, m, mm, soft, sizes, color, integ, system):
         self.n = n
         self.m = m
         self.mm = mm
         self.soft = soft
         self.sizes = sizes
+        self.color = color
         self.integ = integ
         self.system = system
 
@@ -58,6 +59,7 @@ class BodiesPlotting:
         self.nb = len(sim.system.state) // 4 # number of bodies
         self.coord = sim.system.state[:2 * self.nb]
         self.sizes = sim.sizes
+        self.color = sim.color
         self.proj = proj
 
     def setup(self, ax):
@@ -83,6 +85,7 @@ class TracePlotting:
         self.nb = len(sim.system.state) // 4
         self.coord = sim.system.state[:2 * self.nb]
         self.sizes = sim.sizes
+        self.color = sim.color
         self.tracelength = tracelength
         self.proj = proj
 
@@ -146,10 +149,10 @@ class EnergyPlotting:
 if __name__ == "__main__":
     integ = integrator.VerletStormer(DT)
     system = integrator.DynamicSystem(np.concatenate((q, p)), 4 * n, 2)
-    sim = Simulator(n, m, mm, soft, sizes, integ, system)
+    sim = Simulator(n, m, mm, soft, sizes, color, integ, system)
 
     bp = BodiesPlotting(np.max(np.abs(q)) * 3, np.max(np.abs(q)) * 3, sim, None)
-    tp = TracePlotting(np.max(np.abs(q)) * 3, np.max(np.abs(q)) * 3, 100, sim, None)
+    tp = TracePlotting(np.max(np.abs(q)) * 3, np.max(np.abs(q)) * 3, 300, sim, None)
     ep = EnergyPlotting(sim, None)
     ani = animator.Animator(ANIMATION_LENGTH, FRAMES_PER_SECOND, UPDATES_PER_FRAME,
                             sim, [tp, ep])

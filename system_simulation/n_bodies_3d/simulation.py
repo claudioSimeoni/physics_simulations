@@ -1,4 +1,4 @@
-from .data.n_random_circular import *
+from .data.solar_system_NASA import *
 from collections import deque
 from .. import integrator
 from .. import animator
@@ -10,12 +10,13 @@ from .. import animator
 # 
 
 class Simulator:
-    def __init__(self, n, m, mm, soft, sizes, integ, system):
+    def __init__(self, n, m, mm, soft, sizes, color, integ, system):
         self.n = n
         self.m = m
         self.mm = mm
         self.soft = soft
         self.sizes = sizes
+        self.color = color
         self.integ = integ
         self.system = system
 
@@ -60,6 +61,7 @@ class BodiesPlotting:
         self.nb = len(sim.system.state) // 6 # number of bodies
         self.coord = sim.system.state[:3 * self.nb]
         self.sizes = sim.sizes
+        self.color = sim.color
         self.proj = proj
 
     def setup(self, ax):
@@ -73,7 +75,7 @@ class BodiesPlotting:
 
         nb = self.nb
         self.graphics = ax.scatter(self.coord[:nb], self.coord[nb:2 * nb], self.coord[2 * nb:], 
-                                   s=self.sizes, c="black")
+                                   s=self.sizes, c=self.color)
 
     def update(self):
         xs = self.coord[:self.nb]
@@ -155,7 +157,7 @@ class EnergyPlotting:
 if __name__ == "__main__":
     integ = integrator.VerletStormer(DT)
     system = integrator.DynamicSystem(np.concatenate((q, p)), 6 * n, 3)
-    sim = Simulator(n, m, mm, soft, sizes, integ, system)
+    sim = Simulator(n, m, mm, soft, sizes, color, integ, system)
 
     lim = np.max(np.abs(q)) * 3
 
