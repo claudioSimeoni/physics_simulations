@@ -2,8 +2,9 @@ This project contains 2d and 3d simulations of n-bodies problem. The goal was to
 
 ## USAGE
 
-1. Run `poetry install` to install dependencies
-2. Run `python3 -m systems_simulations.dynamic_system.simulation`, where `dynamic_system` is one of the folders inside `systems_simulations`
+1. Make a venv with `python3 -m venv venv`, activate it with `source venv/bin/activate`
+2. Run `poetry install --no-root` to install dependencies
+3. Run `python3 -m systems_simulations.dynamic_system.simulation`, where `dynamic_system` is one of the folders inside `systems_simulations`
 
 - You can even modify which specific `configuration` is run by the `dynamic_system` you pick, just change the file included by the `simulation.py` inside the `dynamic_system` folder you pick.
 - Modifying and creating new configuration is made quite easy since each `dynamic_system` has a `template` inside configuration.
