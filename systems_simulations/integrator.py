@@ -1,7 +1,4 @@
-import numpy as np
-
-
-# with Hamiltonian Mechanics the state is assumed to be q = state[:n], p = state[n:]
+# with Hamiltonian the state is assumed to be q = state[:npc], p = state[npc:]
 class DynamicSystem:
     def __init__(self, state, state_vector_dimension, space_dimension):
         self.time = 0
@@ -31,14 +28,14 @@ class RK4(Integrator):
 
 class ExplicitEuler(Integrator):
     def update(self, system, Hp, Hq):
-        q, p, Hp, Hq, dt = system.state[:system.npc], system.state[system.npc:], Hp, Hq, self.h
-        q[:], p[:] = q + dt * Hp(p), p + dt * -Hq(q)
+        q, p, dt = system.state[:system.npc], system.state[system.npc:], self.h
+        q[:], p[:] = q + dt * Hp(p), p + dt * -Hq(q) # contextual assignment otherwise we would need another variable
         system.time += dt
         
 
 class SymplecticEuler(Integrator):
     def update(self, system, Hp, Hq):
-        q, p, Hp, Hq, dt = system.state[:system.npc], system.state[system.npc:], Hp, Hq, self.h
+        q, p, dt = system.state[:system.npc], system.state[system.npc:], self.h
         p[:] = p + dt * -Hq(q)
         q[:] = q + dt * Hp(p)
         system.time += dt
@@ -46,7 +43,7 @@ class SymplecticEuler(Integrator):
 
 class VerletStormer(Integrator):
     def update(self, system, Hp, Hq):
-        q, p, Hp, Hq, dt = system.state[:system.npc], system.state[system.npc:], Hp, Hq, self.h
+        q, p, dt = system.state[:system.npc], system.state[system.npc:], self.h
         pm = p - dt / 2 * Hq(q)
         q[:] = q + dt * Hp(pm)
         p[:] = pm - dt / 2 * Hq(q)

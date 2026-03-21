@@ -5,18 +5,16 @@ import random
 
 n = 100
 G = 1
-PLANETS_MASSES = [100000] + [1] * (n - 1) # masses of the planets
+PLANETS_MASSES = [100000] + [1] * (n - 1)
 STAR_MASS = PLANETS_MASSES[0]
-e = 1.2 # eccentricity of orbits, can even be a np.array()
+e = 0 # eccentricity of orbits, can even be a np.array()
 
 
 def rotate_orbits(n, R, V):
     for i in range(n):
-        # axis = np.array([random.random() for _ in range(3)])
-        axis = np.array([1, 1, 1])
+        axis = np.array([random.random() for _ in range(3)])
         axis = axis / np.linalg.norm(axis)
-        # angle = random.random() * 2 * np.pi
-        angle = np.pi / 2
+        angle = random.random() * 2 * np.pi
 
         rot = Rotation.from_rotvec(angle * axis)
         R[i] = rot.apply(np.array(R[i])).tolist()
@@ -58,13 +56,14 @@ mm = m[:, None] * m[None, :]
 q = np.array([R[i][0] for i in range(n)] +
              [R[i][1] for i in range(n)] + 
              [R[i][2] for i in range(n)])
-p = np.concatenate((np.array([V[i][0] for i in range(n)]) * m * e, 
-                    np.array([V[i][1] for i in range(n)]) * m * e, 
-                    np.array([V[i][2] for i in range(n)]) * m * e))
+p = np.concatenate((np.array([V[i][0] for i in range(n)]) * m * (1 + e), 
+                    np.array([V[i][1] for i in range(n)]) * m * (1 + e), 
+                    np.array([V[i][2] for i in range(n)]) * m * (1 + e)))
 
 
 # non physical constants
-color = "black"
+color = [np.random.rand(3) for _ in range(n)] 
+# color = "black"
 sizes = 100 * np.arctan(m / 10)
 soft = 0.01 * np.mean(np.abs(q))
 

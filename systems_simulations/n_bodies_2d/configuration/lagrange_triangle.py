@@ -5,9 +5,9 @@ import random
 
 n = 3
 G = 1
-PLANETS_MASSES = [1] * 3 # masses of the planets
+PLANETS_MASSES = [1] * 3
 STAR_MASS = PLANETS_MASSES[0]
-e = 1 # eccentricity of orbits, can even be a np.array()
+e = 0 # eccentricity of orbits, can even be a np.array()
 
 
 # 1. R, V initialization through LIST OF INITIAL PERIODS / MODULES OF SPEED AND COORDINATES / CAN ROTATE VECTORS WITH THE ROTATE
@@ -42,8 +42,8 @@ m = np.array(PLANETS_MASSES)
 mm = m[:, None] * m[None, :]
 q = np.array([R[i][0] for i in range(n)] +
              [R[i][1] for i in range(n)])
-p = np.concatenate((np.array([V[i][0] for i in range(n)]) * m * e, 
-                    np.array([V[i][1] for i in range(n)]) * m * e))
+p = np.concatenate((np.array([V[i][0] for i in range(n)]) * m * (1 + e), 
+                    np.array([V[i][1] for i in range(n)]) * m * (1 + e)))
 
 
 # non physical constants

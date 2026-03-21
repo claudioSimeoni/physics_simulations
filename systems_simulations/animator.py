@@ -12,15 +12,14 @@ import matplotlib.animation as animation
     4. Angular Momentum
     ...
 
-- how does this work:
-    the Animator takes the Elements to plot (object that describe one ax), when updating it 
-    makes the system step on, and after that it plots the graphics with the updates of each 
-    Element
+Animator takes the Simulator the Plottings to plot (objects that implement axes drawings), when 
+updating it firstly makes the Simulator step on by calling sim.step(), and after that it plots 
+the graphics by calling the update() of each Plotting.
 '''
 
 
 class Animator:
-    def __init__(self, length, fps, updates_per_frame, simulator, visual_elements):
+    def __init__(self, bg, length, fps, updates_per_frame, simulator, visual_elements):
         self.length = length
         self.fps = fps
         self.updates_per_frame = updates_per_frame
@@ -30,6 +29,8 @@ class Animator:
         n = len(self.elems)
         self.fig = plt.figure()
         self.axs = []
+
+        self.fig.patch.set_facecolor(bg) # setting the background color
 
         for i, el in enumerate(self.elems):
             ax = self.fig.add_subplot(1, n, i + 1, projection=el.proj) # TODO: maybe make more flexible the positioning
