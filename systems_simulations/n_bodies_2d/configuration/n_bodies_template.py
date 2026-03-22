@@ -3,7 +3,7 @@ from scipy.spatial.transform import Rotation
 import random
 
 
-n = 10
+n = 50
 G = 1
 PLANETS_MASSES = [100000] + [1] * (n - 1)
 STAR_MASS = PLANETS_MASSES[0]
@@ -47,6 +47,7 @@ p = np.concatenate((np.array([V[i][0] for i in range(n)]) * m * (1 + e),
 
 
 # non physical constants
+# color = [np.random.rand(3) for _ in range(n)] 
 color = "black"
 sizes = 100 * np.arctan(m / 10)
 soft = 0.01 * np.mean(np.abs(q))

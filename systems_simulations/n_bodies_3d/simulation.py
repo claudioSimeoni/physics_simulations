@@ -1,4 +1,4 @@
-from .configuration.n_bodies_random_rotation import *
+from .configuration.nasa.full_solar_system_NASA import *
 from collections import deque
 from .. import integrator
 from .. import animator
@@ -214,7 +214,7 @@ class TracePlotting:
                 line.set_3d_properties(pts[:, 2])
 
         self.graphics._offsets3d = (xs, ys, zs)
-        return [self.graphics, *self.trace_lines]
+        return [self.graphics] + self.trace_lines
 
 
 class EnergyPlotting:

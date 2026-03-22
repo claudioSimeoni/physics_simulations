@@ -74,7 +74,7 @@ color = [
     "cyan",         # Uranus
     "royalblue"     # Neptune
 ]
-sizes_scale = 1500
+sizes_scale = 1000
 sizes = [
     696340/sizes_scale,    # Sun
     2440/sizes_scale,      # Mercury

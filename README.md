@@ -18,6 +18,17 @@ In `n_bodies_3d` template for configuration, you can initiate R (initial positio
 
 ## DEMO
 
+![](demo/colored_3d_n_bodies_blackbg.gif)
+
+![](demo/colored_3d_n_bodies_whitebg.gif)
+
+![](demo/infinite_2d_whitebg.gif)
+
+![](demo/single_plane_colored_3d_nbodies_blackbg.gif)
+
+![](demo/solar_system_blackbg.gif)
+
+
 ## NASA DATA COMPARISON
 
 
