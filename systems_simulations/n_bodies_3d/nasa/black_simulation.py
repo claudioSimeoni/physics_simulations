@@ -1,7 +1,7 @@
-from .configuration.n_bodies_random_rotation import *
+from ..configuration.nasa.full_solar_system_NASA import *
 from collections import deque
-from .. import integrator
-from .. import animator
+from ... import integrator
+from ... import animator
 import time
 
 
@@ -44,7 +44,7 @@ class Simulator:
         return T1 + T2 + T3 + U
 
     def Hp(self, p):
-        n, m= self.n, self.m
+        n, m = self.n, self.m
         return np.concatenate((p[:n] / m, p[n:2 * n] / m, p[2 * n:] / m))
 
     def Hq(self, q):
@@ -247,7 +247,19 @@ class EnergyPlotting:
     
 
 if __name__ == "__main__":
-    integ = integrator.VerletStormer(h=DT)
+    integrators = [integrator.ExplicitEuler(h=DT), integrator.SymplecticEuler(h=DT), 
+                   integrator.VerletStormer(h=DT), integrator.RK4(h=DT)]
+    integ_index = int(input('''
+Select the integrator:
+                            
+0 = Explicit Euler
+1 = Symplectic Euler
+2 = Verlet Stormer
+3 = RK4
+                            
+'''))
+    
+    integ = integrators[integ_index]
     system = integrator.DynamicSystem(state=np.concatenate((q, p)), state_vector_dimension=6 * n, space_dimension=3)
     sim = Simulator(n, m, mm, soft, integ, system)
 

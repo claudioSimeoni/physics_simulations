@@ -1,3 +1,5 @@
+import numpy as np
+
 # with Hamiltonian the state is assumed to be q = state[:npc], p = state[npc:]
 class DynamicSystem:
     def __init__(self, state, state_vector_dimension, space_dimension):
@@ -14,16 +16,20 @@ class Integrator:
 
     def update(self, system):
         raise NotImplementedError
-    
+
 
 class RK4(Integrator):
-    def update(self, system, f):
-        dt, t, y, f = self.h, system.time, system.state, f
+    def update(self, system, Hp, Hq):
+        dt, t, y = self.h, system.time, system.state
+
+        def f(t, y):
+            return np.concatenate((Hp(y[system.npc:]), -Hq(y[:system.npc])))
+        
         k1 = f(t, y)
         k2 = f(t + dt/2, y + dt/2 * k1)
         k3 = f(t + dt/2, y + dt/2 * k2)
         k4 = f(t + dt, y + dt * k3)
-        system.time, system.state = t + dt, y + dt/6 * (k1 + 2 * k2 + 2 * k3 + k4)
+        system.time, system.state[:] = t + dt, y + dt/6 * (k1 + 2 * k2 + 2 * k3 + k4)
 
 
 class ExplicitEuler(Integrator):
@@ -50,4 +56,3 @@ class VerletStormer(Integrator):
         system.time += dt
 
 # TODO: implementing other integrators
-

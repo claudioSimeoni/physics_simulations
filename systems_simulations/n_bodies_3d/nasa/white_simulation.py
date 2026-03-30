@@ -1,7 +1,7 @@
-from .configuration.n_bodies_random_rotation import *
+from ..configuration.nasa.full_solar_system_NASA import *
 from collections import deque
-from .. import integrator
-from .. import animator
+from ... import integrator
+from ... import animator
 import time
 
 
@@ -44,7 +44,7 @@ class Simulator:
         return T1 + T2 + T3 + U
 
     def Hp(self, p):
-        n, m= self.n, self.m
+        n, m = self.n, self.m
         return np.concatenate((p[:n] / m, p[n:2 * n] / m, p[2 * n:] / m))
 
     def Hq(self, q):
@@ -159,26 +159,26 @@ class TracePlotting:
         ax.set(ylim3d=(-self.ylim, self.ylim), ylabel='Y')
         ax.set(zlim3d=(-self.zlim, self.zlim), zlabel='Z')
         ax.set_title("Galaxy")
-        ax.set_facecolor("black")
+        ax.set_facecolor("white")
         ax.set_aspect("equal")
-        ax.grid(False)
+        ax.grid(True)
 
         # comment this for white bg along with set_facecolor("white")
-        ax.xaxis.set_pane_color((0,0,0,1))
-        ax.yaxis.set_pane_color((0,0,0,1))
-        ax.zaxis.set_pane_color((0,0,0,1))
+        # ax.xaxis.set_pane_color((0,0,0,1))
+        # ax.yaxis.set_pane_color((0,0,0,1))
+        # ax.zaxis.set_pane_color((0,0,0,1))
 
         # this makes the plotting bigger
-        ax.set_position([0, 0, 1, 1])
+        # ax.set_position([0, 0, 1, 1])
 
         # text
-        self.time_text = ax.text2D(0.05, 0.95, '', transform=ax.transAxes, fontsize=10, color="white")
-        self.fps_text = ax.text2D(0.95, 0.95, '', transform=ax.transAxes, fontsize=10, color="white")
+        self.time_text = ax.text2D(0.05, 0.95, '', transform=ax.transAxes, fontsize=10, color="black")
+        self.fps_text = ax.text2D(0.95, 0.95, '', transform=ax.transAxes, fontsize=10, color="black")
 
         # list of ax elements, each of them is a trace (a line plot)
         self.trace_lines = []
         for _ in range(self.nb):
-            line, = ax.plot([], [], [], color="white", lw=1.5, alpha=0.1)
+            line, = ax.plot([], [], [], color=self.color[_], lw=1.5, alpha=0.1)
             self.trace_lines.append(line)
 
 
@@ -246,8 +246,50 @@ class EnergyPlotting:
         return self.line,
     
 
+class RelativeEnergyPlotting:
+    def __init__(self, sim, proj):
+        self.t = []
+        self.energy = []
+        self.sim = sim
+        self.proj = proj
+        self.e0 = self.sim.H()
+
+    def setup(self, ax):
+        self.ax = ax
+        self.ax.grid()
+        self.line, = self.ax.plot(self.t, self.energy, label="Energy", color='red', lw=2)
+        self.ax.set_xlabel("Time (s)")
+        self.ax.set_ylabel("Energy Error (%)")
+        self.ax.set_title("Energy")
+        self.ax.legend()
+        self.energy_text = self.ax.text(0.05, 0.95, '', transform=self.ax.transAxes, fontsize=10)
+
+    def update(self):
+        self.t.append(self.sim.system.time)
+        self.energy.append(np.abs((self.sim.H() - self.e0) / self.e0 * 100))
+        self.line.set_data(self.t, self.energy)
+
+        self.energy_text.set_text(f"Energy = {self.energy[-1]} %")
+
+        self.ax.relim()
+        self.ax.autoscale_view()
+        return self.line,
+
+
 if __name__ == "__main__":
-    integ = integrator.VerletStormer(h=DT)
+    integrators = [integrator.ExplicitEuler(h=DT), integrator.SymplecticEuler(h=DT), 
+                   integrator.VerletStormer(h=DT), integrator.RK4(h=DT)]
+    integ_index = int(input('''
+Select the integrator:
+                            
+0 = Explicit Euler
+1 = Symplectic Euler
+2 = Verlet Stormer
+3 = RK4
+                            
+'''))
+    
+    integ = integrators[integ_index]
     system = integrator.DynamicSystem(state=np.concatenate((q, p)), state_vector_dimension=6 * n, space_dimension=3)
     sim = Simulator(n, m, mm, soft, integ, system)
 
@@ -256,7 +298,8 @@ if __name__ == "__main__":
     bp = BodiesPlotting(lim, lim, lim, sizes, color, proj="3d", start_time=time.time(), sim=sim)
     tp = TracePlotting(lim, lim, lim, sizes, color, tracelength=50, proj="3d", start_time=time.time(), sim=sim)
     ep = EnergyPlotting(sim, proj=None) # note that to plot this you gotta set everything to white otherwise looks awful
-    ani = animator.Animator("black", ANIMATION_LENGTH, FRAMES_PER_SECOND, UPDATES_PER_FRAME,
-                            sim, visual_elements=[tp]) # in the list insert any Plotting objects you want to plot
+    rep = RelativeEnergyPlotting(sim, proj=None) # note that to plot this you gotta set everything to white otherwise looks awful
+    ani = animator.Animator("white", ANIMATION_LENGTH, FRAMES_PER_SECOND, UPDATES_PER_FRAME,
+                            sim, visual_elements=[tp, rep]) # in the list insert any Plotting objects you want to plot
     
     ani.run()

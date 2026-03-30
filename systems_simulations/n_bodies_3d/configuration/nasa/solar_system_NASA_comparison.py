@@ -52,9 +52,9 @@ def retrieve_solar_system_data(date):
             vec['vz'].quantity.to(u.km/u.s).value[0]
         ])
 
-    print("\n", date, ": ")
-    for i in range(0, n):
-        print(names[i], ": \n", "R = ", R[i], "\n", "V = ", V[i])
+    # print("\n", date, ": ")
+    # for i in range(0, n):
+    #     print(names[i], ": \n", "R = ", R[i], "\n", "V = ", V[i])
 
 
 m = np.array(PLANETS_MASSES)
@@ -74,6 +74,11 @@ def compute_initial_positions():
                         np.array([V[i][2] for i in range(n)]) * m))
 
 
+def revert_pq(q, p):
+    R = [[q[i], q[i+n], q[i+2*n]] for i in range(n)]
+    return R
+
+
 # animation constants
-DAY_FRACTION_FOR_SIMULATION = 100
+DAY_FRACTION_FOR_SIMULATION = 1
 DT = 60 * 60 * 24 / DAY_FRACTION_FOR_SIMULATION
