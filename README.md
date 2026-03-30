@@ -11,13 +11,13 @@ To ease the first approach to the project try running these three following simu
 - `python3 -m systems_simulations.n_bodies_3d.simulation`
 - `python3 -m systems_simulations.n_bodies_3d.nasa.black_simulation`
 
-#### EXAMPLES OF THINGS YOU CAN DO
+#### Examples of things you can do
 
 - You can even modify which specific `configuration` is run by the `dynamic_system` you pick, just change the file included by the `simulation.py` inside the `dynamic_system` folder you pick.
 - Modifying and creating new configuration is made quite easy since each `dynamic_system` has a `template` inside configuration.
 - Adding a new type of plot requires changing `simulation.py` of the specific `dynamic_system`, just create a new object using the default ones (e.g. `BodiesPlotting` in `n_bodies_3d`) as an example.
 
-#### SPECIFIC CONFIGURATION TEMPLATES
+#### Specific configuration templates
 
 In `n_bodies_3d` template for configuration, you can initiate R (initial positions) and V (initial speeds) in 2 main ways: 
 1. By defining `MAX_T`, the maximum period of an orbit, then other periods will be randomly chosen between 0 and `MAX_T`, and the orbits will automatically be elliptic (with eccentricity `e` that can also be selected) with positions on x ax and speeds on y ax. You can even rotate the starting orbits by manipulating the `rotate_orbits` function.
